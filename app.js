@@ -2,10 +2,14 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const db = require("./db.js")
-const getClient = require('./getDataFromClient.js')
+const renderingNotes = require("./renderingNotesFromDb")
+
+// const getClient = require('./getDataFromClient.js')
 
 http
-  .createServer((req, res) => {
+  .createServer((req,res) => {
+ 
+ 
     //вывод статических файлов у клиента
     rendering(req, res);
   })
@@ -13,21 +17,42 @@ http
 
 //routing
 function rendering(req, res) {
-  getClient(req).then(data=>{
-    let response = JSON.parse(data)
-    let body = response.body
-    let header = response.header
-    db.addNote(header,body)
-  })
+
   if (req.url === "/") {
     postStatickFilesToClient("index.html", "text/html", res);
   
-  }else if(req.url === "/notes"){
-   //
-  } else {
+  }else if(req.url==="/get.json"){
+    renderingNotes().then(data=>{
+      res.end(data)
+    })
+  }else{
     postStatickFilesToClient(req.url.slice(1), getTypeContent(req.url), res);
   }
+
+  if(req.url ==="/notes"){
+    async function getDataFromClient(){
+      return new Promise((res,rej)=>{
+        result = ""
+        req.on("data",(chunk)=>{
+          result+=chunk
+        })
+        req.on("end",()=>{
+          res(result)
+          
+        })
+      })
+    }
+    getDataFromClient().then(data=>{
+      let response = JSON.parse(data)
+      let body = response.body
+      let header = response.header
+      db.addNote(header,body)
+    })
+  }
+
 }
+
+
 //функция, которая находит статический файл и отправляет его клиенту.
 function postStatickFilesToClient(extension, header, res) {
   //путь

@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", ready);
 //прогрузка при запуске
 function ready() {
   getDataFromDb().then((data) => {
-    console.log(data);
     renderData(data);
   });
 }
@@ -64,9 +63,7 @@ function renderData(data) {
     }
   });
   content.querySelectorAll("div").forEach(item=>{
-    console.log(item)
     item.addEventListener("click",({target})=>{
-      console.log(target.id)
       deletefunc(target.id,item)
     })
   })

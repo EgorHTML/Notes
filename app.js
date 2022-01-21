@@ -44,13 +44,7 @@ function rendering(req, res) {
       })
     }
     actionsClient(getDataFromClient)
-    // getDataFromClient().then(data=>{
-    //   let response = JSON.parse(data)
-    //   let body = response.body
-    //   let header = response.header
-    //   let id =  response.id
-    //   db.addNote(id,header,body)
-    // })
+
   }
 
 }

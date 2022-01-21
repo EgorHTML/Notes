@@ -68,8 +68,6 @@ function renderData(data) {
     item.addEventListener("click",({target})=>{
       console.log(target.id)
       deletefunc(target.id,item)
-      
-      
     })
   })
   

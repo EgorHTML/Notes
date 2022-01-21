@@ -9,17 +9,23 @@ class Db{
             password:'1593007k'
         })
     }
-    addNote(header,body){
+    addNote(id,header,body){
         this.connection().connect(err=>{
             if(err)console.log(err.message)
         })
-        this.connection().query("INSERT INTO notes(header,body) VALUES(?,?)",[header,body])
+        this.connection().query("INSERT INTO notes(id,header,body) VALUES(?,?,?)",[id,header,body])
         this.connection().end(err=>{
             if(err)console.log(err.message)
         })
     }
-    deleteNote(){
-        //
+    deleteNote(id){
+        this.connection().connect(err=>{
+            if(err)console.log(err.message)
+        })
+        this.connection().query(`DELETE FROM notes WHERE id=?`,id)
+        this.connection().end(err=>{
+            if(err)console.log(err.message)
+        })
     }
 }
 let db = new Db()

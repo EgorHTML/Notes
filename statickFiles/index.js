@@ -15,19 +15,23 @@ function ready() {
 addButton.addEventListener("click", () => {
   let valueHed = nameNote.value;
   let valueBody = bodyNote.value;
-  postToServer(valueHed, valueBody);
+  let id = `${new Date().getSeconds()}${new Date().getMilliseconds()}${new Date().getDay()}`
+  postToServer(valueHed, valueBody,id);
   getDataFromDb().then(() => {
-    renderData([{ header: valueHed, body: valueBody }]);
+    
+    renderData([{ id:id,header: valueHed, body: valueBody,method:"add" }]);
   });
 
   nameNote.value = "";
   bodyNote.value = "";
 });
 
-async function postToServer(valueHed, valueBody) {
+async function postToServer(valueHed, valueBody,id) {
   let result = {
+    id:id,
     header: valueHed,
     body: valueBody,
+    method:"add"
   };
   await fetch("/notes", {
     method: "POST",
@@ -46,16 +50,44 @@ function renderData(data) {
   data.forEach((data) => {
     if (data.header != null && data.body != null) {
       let div = document.createElement("div");
-
+      
       let html = ` <div class="card" style="width: 18rem;">  
             <div class="card-body">
               <h5 class="card-title">${data.header}</h5>
-              <p class="card-text">${data.body}</p>   
+              <p class="card-text">${data.body}</p>  
+              <button id="${data.id}" class="deleteBtn">delete</button> 
             </div>
           </div>`;
       div.innerHTML = html;
-
+      
       content.appendChild(div);
     }
   });
+  content.querySelectorAll("div").forEach(item=>{
+    console.log(item)
+    item.addEventListener("click",({target})=>{
+      console.log(target.id)
+      deletefunc(target.id,item)
+      
+      
+    })
+  })
+  
+}
+
+async function deletefunc(id,item){
+  if(id){
+    item.innerHTML = ""
+    let delMethod = {
+      method:"delete",
+      id:id
+    }
+     await fetch('/notes',{
+      method:"POST",
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body:JSON.stringify(delMethod)
+    })
+  }
+  
+  
 }

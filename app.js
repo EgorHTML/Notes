@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const db = require("./db.js")
 const renderingNotes = require("./renderingNotesFromDb")
+const actionsClient = require('./actionsClient')
 
 // const getClient = require('./getDataFromClient.js')
 
@@ -42,12 +43,14 @@ function rendering(req, res) {
         })
       })
     }
-    getDataFromClient().then(data=>{
-      let response = JSON.parse(data)
-      let body = response.body
-      let header = response.header
-      db.addNote(header,body)
-    })
+    actionsClient(getDataFromClient)
+    // getDataFromClient().then(data=>{
+    //   let response = JSON.parse(data)
+    //   let body = response.body
+    //   let header = response.header
+    //   let id =  response.id
+    //   db.addNote(id,header,body)
+    // })
   }
 
 }

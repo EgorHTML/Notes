@@ -6,7 +6,7 @@ class Db{
             host:"localhost",
             user:"root",
             database:"usersdb",
-            password:'1593007k'
+            password:'......'
         })
     }
     addNote(id,header,body){
